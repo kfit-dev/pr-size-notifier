@@ -1,0 +1,6 @@
+# action.yml
+name: 'PR Size Notifier'
+description: 'Adds an automatic comment when a PR exceeds the accepted LOC.'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
