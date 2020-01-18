@@ -29,21 +29,16 @@ total_addition_and_deletions = pr['additions'] + pr['deletions']
 
 github_bot_username = 'github-actions[bot]'
 large_pr_comment_message = 'This pull request is big. We prefer smaller PRs whenever possible, as they are easier to review. Can this be split into a few smaller PRs?'
-small_pr_comment_message = 'Good Job On Making A Smaller PR.'
 
 pr_comments = github.issue_comments(repo_name, pr_number)
 
 # delete previous github bot comments
 github_pr_size_bot_comments = pr_comments.select do |pr_comment|
-                                pr_comment['user']['login'] == github_bot_username && (pr_comment['body'] == large_pr_comment_message || pr_comment['body'] ==  small_pr_comment_message)
+                                pr_comment['user']['login'] == github_bot_username && pr_comment['body'] == large_pr_comment_message
                               end
 
 github_pr_size_bot_comments.each { |github_pr_size_bot_comment|  github.delete_comment(repo_name, github_pr_size_bot_comment['id']) }
 
 if total_addition_and_deletions > acceptable_pr_size
   github.add_comment(repo_name, pr_number, large_pr_comment_message)
-end
-
-if total_addition_and_deletions < acceptable_pr_size
-  github.add_comment(repo_name, pr_number, small_pr_comment_message)
 end
